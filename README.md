@@ -3,6 +3,23 @@
 # Video 1: Getting Started with Cloud9
 No summary provided.
 
+
+## hack to get rid of Django warning
+
+All this from the command line (and assuming you are in the workspace directory:
+
+     sudo pip install virtualenv
+     virtualenv venv
+     source venv/bin/activate
+     pip install django
+     
+Then close the terminal
+
+Open up the preferences.  Scroll to the language support > Python section and add the following to the end of the pythonpath
+
+     :/home/ubuntu/workspace/venv/lib/python2.7/site-packages
+ 
+ 
 ------
 
 # Video 2: Getting Started with Flask!
@@ -36,7 +53,8 @@ No summary provided.
      if __name__ == '__main__':
          app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug=True)
      
-
+    
+     
 ------
 
 # Video 3: Flask Template Basics
