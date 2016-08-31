@@ -18,6 +18,14 @@ No summary provided.
 
 ## Happy Coding!
 
+### Installing Flask and Markdown
+
+     sudo easy_install flask markdown
+     
+### The most basic server code:
+
+     
+
 ------
 
 # Video 3: Flask Template Basics
