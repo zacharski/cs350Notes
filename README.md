@@ -366,7 +366,13 @@ Now we can access the value of that input field by using `request.form['plane']`
 6. if inserting make sure to use `conn.commit()`
 
 
-### installing the psycopg2 module:
+### installing the psycopg2 module
+
+#### first, update the package list
+
+     sudo apt-get update
+     
+#### then install the adapter     
 
      sudo apt-get install python-psycopg2
      
