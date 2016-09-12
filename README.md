@@ -306,7 +306,7 @@ HTML side:
 
 when the user presses the `Press Me` button the Python code associated with the `registration2` decorator will be executed. So we need to add that code:
 
-     @app.route('/registration2', method=['POST'])
+     @app.route('/registration2', methods=['POST'])
      def reply():
          return render_template('r2.html')
          
