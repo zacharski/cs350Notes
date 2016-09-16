@@ -2,7 +2,7 @@
 
 ## Contents
 ### [Video 1: Getting Started with Cloud9](#video-1-getting-started-with-cloud9-1)
-### [Video 2: Getting Started with Flask](#video 2-getting-started-with-flask-1)
+### [Video 2: Getting Started with Flask](#video-2-getting-started-with-flask-1)
 ### [Video 3: Flask Template Basics](#video-3-flask-template-basics-1)
 ### [Video 4: Flask Templates - Variables, Conditionals, and Loops](#video-4-flask-templates---variables-conditionals-and-loops-1)
 ### [Video 5: PostgreSQL on Cloud9](#video-5-postgresql-on-cloud9-1)
