@@ -1,16 +1,16 @@
 ## Welcome to CS350
 
 ## Contents
-### [Video 1: Getting Started with Cloud9](#video-1-getting-started-with-cloud9)
-### [Video 2: Getting Started with Flask](#video 2-getting-started-with-flask)
-### [Video 3: Flask Template Basics](#video-3-flask-template-basics)
-### [Video 4: Flask Templates - Variables, Conditionals, and Loops](#video-4-flask-templates---variables-conditionals-and-loops)
-### [Video 5: PostgreSQL on Cloud9](#video-5-postgresql-on-cloud9)
-### [Video 6: PostgreSQL and the Principle of Least Privilege](#video-6-postgresql-and-the-principle-of-least-privilege)
-### [Video 7: Flask and HTML forms](#video-7-flask-and-html-forms)
-### [Video 8: PostgreSQL and Flask: Using the psycopg2 adapter](#video-8-postgresql-and-flask-using-the-psycopg2-adapter)
-### [Video 9: hints, common errors, and bad practices](#video-9-hints-common-errors-and-bad-practices)
-### [Video 10: Session Variables and Hashing Passwords](#video-10-session-variables-and-hashing-passwords)
+### [Video 1: Getting Started with Cloud9](#video-1-getting-started-with-cloud9-1)
+### [Video 2: Getting Started with Flask](#video 2-getting-started-with-flask-1)
+### [Video 3: Flask Template Basics](#video-3-flask-template-basics-1)
+### [Video 4: Flask Templates - Variables, Conditionals, and Loops](#video-4-flask-templates---variables-conditionals-and-loops-1)
+### [Video 5: PostgreSQL on Cloud9](#video-5-postgresql-on-cloud9-1)
+### [Video 6: PostgreSQL and the Principle of Least Privilege](#video-6-postgresql-and-the-principle-of-least-privilege-1)
+### [Video 7: Flask and HTML forms](#video-7-flask-and-html-forms-1)
+### [Video 8: PostgreSQL and Flask: Using the psycopg2 adapter](#video-8-postgresql-and-flask-using-the-psycopg2-adapter-1)
+### [Video 9: hints, common errors, and bad practices](#video-9-hints-common-errors-and-bad-practices-1)
+### [Video 10: Session Variables and Hashing Passwords](#video-10-session-variables-and-hashing-passwords-1)
 
 
 # Video 1: Getting Started with Cloud9
