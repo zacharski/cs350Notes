@@ -1,5 +1,18 @@
 ## Welcome to CS350
 
+## Contents
+### [Video 1: Getting Started with Cloud9](#video-1-getting-started-with-cloud9)
+### [Video 2: Getting Started with Flask](#video 2-getting-started-with-flask)
+### [Video 3: Flask Template Basics](#video-3-flask-template-basics)
+### [Video 4: Flask Templates - Variables, Conditionals, and Loops](#video-4-flask-templates---variables-conditionals-and-loops)
+### [Video 5: PostgreSQL on Cloud9](#video-5-postgresql-on-cloud9)
+### [Video 6: PostgreSQL and the Principle of Least Privilege](#video-6-postgresql-and-the-principle-of-least-privilege)
+### [Video 7: Flask and HTML forms](#video-7-flask-and-html-forms)
+### [Video 8: PostgreSQL and Flask: Using the psycopg2 adapter](#video-8-postgresql-and-flask-using-the-psycopg2-adapter)
+### [Video 9: hints, common errors, and bad practices](#video-9-hints-common-errors-and-bad-practices)
+### [Video 10: Session Variables and Hashing Passwords](#video-10-session-variables-and-hashing-passwords)
+
+
 # Video 1: Getting Started with Cloud9
 No summary provided.
 
@@ -514,3 +527,133 @@ Another good option is
     except:
         print('Error executing: %s' % query)
 
+# Video 10: Session Variables and Hashing Passwords
+HTTP is a stateless protocol. It has no built-in way to maintain state between 2 transactions.
+
+**Global variables do not work (at least on their own) to store session data**
+## Session Variables
+
+1. Session Variables are stored on the server.
+2. They persist across multiple pages
+3. Unlike cookies, they have no expiration date. They die when the session ends.
+4. A session can end when you close the browser. Cookies can persist even when you close your browser.
+
+## Using session variables
+
+### 1. starting a session
+
+     from flask import Flask, session
+     import os
+     app.secret_key = os.urandom(24).encode('hex')
+     
+The secret key is to sign cookies that are used by the Session (you don't need to handle these cookies - it is done for you)
+
+### 2. setting and accessing session variables
+
+To set a session variable
+  
+      session['username'] = 'Ann'
+      session['plane'] = ['Impulse RC Alien']
+      session['zip'] = 88005
+      
+Using a session variable value:
+
+     print(session['username'])
+     query = cur.mogrify('SELECT * FROM users WHERE name= %s', session['username'])
+     
+### 3. delete a session variable
+
+     session.pop('name', None)
+     
+## Hashing Passwords
+
+### NEVER EVER STORE PASSWORDS IN THE CLEAR
+*in the clear* means human readable.
+
+*example*
+
+First, we create a users table
+
+     create users (username text, password text);
+
+    
+We shouldn't do this:
+
+     insert into users values ('ann', 'changeme'), ('Ben', 'w0r1dP34c3');
+     
+Because anyone who gains access to the database can see everyone's password:
+
+     SELECT * FROM users;
+     
+username | password 
+----------+----------
+ann | changeme
+ben| w0r1dP34c3
+
+(2 rows)
+
+Maybe you think, *who cares if someone gets the passwords for the RC club -- its not that important.*  But Ben might think his password is great and use it, not only for the UMW RC Club, but for Capital One and other important sites. 
+
+## Steps to hashing passwords
+
+### 1. install the package (you only need to do this once per postgresql server)
+(so, in cloud9, you only need to do this once per virtual machine you create)
+
+     sudo apt-get install postgresql-contrib-9.3
+     
+### 2. enable hashing within the Database
+You need to do this for each database in which you wish to hash passwords. For example, If both the databases , `pets` and `music` have a table that stores passwords you need to do this for both databases.  
+**NOTE:** If you are creating an SQL file that builds your database, you can put this command in that file
+
+The command is:
+
+     CREATE EXTENSION pgcrypto;
+
+So, for example, here I log into the postgres client, psql, change to the `world` database, and execute the command.
+
+     mitsugo:~/workspace $ psql -U postgres -h localhost
+     Password for user postgres: 
+     ...
+
+     postgres=# \c world
+     You are now connected to database "world" as user "postgres".
+     world=# CREATE EXTENSION pgcrypto; 
+     CREATE EXTENSION
+### 3. hashing passwords when inserting into the table
+
+If I am inserting a person with username `ann` and password `changeme`:
+
+     INSERT INTO users VALUES ('ann', crypt('changeme', gen_salt('bf')));
+
+* For an 8 character a-z password it would take 246 years to crack via brute force.
+* For an 8 character a-z, A-Z, 0-9 password it would take 251,322 years to crack.
+
+Here is what the password looks like within the table:
+
+     world=# SELECT * FROM users;
+ username |                           password                           
+----------+--------------------------------------------------------------
+ ann      | $2a$06$AFHesYQKTEMU.YSBJlK0i.ZOsRyGBvgZ1aTI6cV1judtBa9plnrge
+(1 row)
+
+
+### 4. checking if user entered correct password
+let's say a person types in `ann` with the correct password and we check it via
+
+     world=# SELECT * FROM users WHERE username = 'ann' and 
+     password = crypt('changeme', password);
+ username |                           password                           
+----------+--------------------------------------------------------------
+ ann      | $2a$06$AFHesYQKTEMU.YSBJlK0i.ZOsRyGBvgZ1aTI6cV1judtBa9plnrge
+(1 row)
+
+so we get a result back. Now here is an example of a person typing in the incorrect password:
+
+     world=# SELECT * FROM users WHERE username = 'ann' and 
+     password = crypt('123456', password);
+
+ username | password 
+----------+----------
+(0 rows)
+     
+we get no match and nothing is returned.
