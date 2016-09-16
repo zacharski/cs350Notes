@@ -11,6 +11,7 @@
 ### [Video 8: PostgreSQL and Flask: Using the psycopg2 adapter](#video-8-postgresql-and-flask-using-the-psycopg2-adapter-1)
 ### [Video 9: hints, common errors, and bad practices](#video-9-hints-common-errors-and-bad-practices-1)
 ### [Video 10: Session Variables and Hashing Passwords](#video-10-session-variables-and-hashing-passwords-1)
+### [Video 11: Learning the rudiments of sessions and passwords](#video-11-learning-the-rudiments-of-sessions-and-passwords-1)
 
 
 # Video 1: Getting Started with Cloud9
@@ -657,3 +658,56 @@ so we get a result back. Now here is an example of a person typing in the incorr
 (0 rows)
      
 we get no match and nothing is returned.
+
+# Video 11: Learning the rudiments of sessions and passwords
+
+This video described the super search rudiment. Here are some things to consider:
+
+## converting a mySQL SQL file to a PostgreSQL one
+Suppose my MySQL file looks like this:
+
+     CREATE DATABASE IF NOT EXISTS pets;
+     USE pets;
+     
+     CREATE TABLE IF NOT EXISTS frogs (
+         `id` int(11) NOT NULL AUTO_INCREMENT,
+         `name` varchar(70) NOT NULL,
+         `species` varchar(50) NOT NULL,
+         `age` int(3) NOT NULL,
+         PRIMARY KEY (`id`)
+     ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+     
+     INSERT INTO frogs (id, name, species, age) VALUES 
+           (1, 'Froggy', 'Blue Dart', 2),
+           (2, 'Sammy', 'Yellow Banded Poison Arrow', 4),
+           (3, 'Dido', 'Standard Tree', 3);
+           
+How do we convert this to a Postgresql compatible file? Here are a few things to note:
+
+1. the `IF NOT EXISTS` on the create database line does not exist in Postgresql. We need to remove it.
+2. Postgresql does not use `USE` and instead uses `\c`
+2. Postgres handles auto incrementing fields differently and uses the `serial` datatype rather than the `AUTO_INCREMENT` tag. 
+3. The term *precision* refers to the number of digits in a number and *scale* refers to the number of digits to the right of the decimal point. Postgresql does not allow us to specify the precision of an integer (as in the above line for age with `int(3)`). There are 2 alternatives, we can either change the datatype to `int` or use `numeric(3)`. With the numeric datatype you can specify both precision and scale with `numeric(precision, scale) ` For example `numeric(5,2)`
+4. Everything after the closing ) should be removed.
+5. Since the `id` field will now be a serial, when we do our insert we need to not include this field.
+
+With that in mind, here is the Postgres version of the above.
+
+       DROP DATABASE pets;
+       CREATE DATABASE  pets;
+       \c pets;
+     
+     CREATE TABLE IF NOT EXISTS frogs (
+         id serial,
+         name varchar(70) NOT NULL,
+         species varchar(50) NOT NULL,
+         age`int(3) NOT NULL,
+         PRIMARY KEY (`id`)
+     );
+     
+     INSERT INTO frogs (name, species, age) VALUES 
+           ('Froggy', 'Blue Dart', 2),
+           ('Sammy', 'Yellow Banded Poison Arrow', 4),
+           ('Dido', 'Standard Tree', 3);
+    
+
