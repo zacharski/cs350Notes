@@ -12,7 +12,7 @@
 ### [Video 9: hints, common errors, and bad practices](#video-9-hints-common-errors-and-bad-practices-1)
 ### [Video 10: Session Variables and Hashing Passwords](#video-10-session-variables-and-hashing-passwords-1)
 ### [Video 11: Learning the rudiments of sessions and passwords](#video-11-learning-the-rudiments-of-sessions-and-passwords-1)
-
+### [Video 12: SocketIO Part 1: AngularJS and flask-socketio](#video-12-socketio-part-1-angularjs-and-flask-socketio-1)
 
 # Video 1: Getting Started with Cloud9
 No summary provided.
@@ -710,4 +710,172 @@ With that in mind, here is the Postgres version of the above.
            ('Sammy', 'Yellow Banded Poison Arrow', 4),
            ('Dido', 'Standard Tree', 3);
     
+
+# Video 12: SocketIO Part 1: AngularJS and flask-socketio
+
+## Model View Controller - hands on
+
+## 
+AngularJS
+Runs in the browser.
+
+So to use SocketIO you need something running in the browser (which will be AngularJS) and something server side (which will be Python/Flask Socketio)
+
+     
+## Installing Flask-Socketio
+
+     sudo easy_install flask-socketio
+    
+Getting the github repository for this demo:
+
+     git clone https://github.com/zacharski/ISSchat.git
+ 
+
+Here are the steps to take to implement a simple chat app:
+
+### 1. import libraries
+    
+Now in my index.html file I will add the following 2 lines to import some javascript libraries (the angular and socketio ones):
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.js"></script>
+
+### 2. next indicate the the web page is an angular app by modifying the html tag from `<html>` to
+     <html ng-app="ISSChatApp">
+     
+that `ISSChatApp` can be any name you want. I will show you what it connects to shortly.
+
+### 3. We need to modify the username field, the scrolling window that shows the messages, and a few other tags:
+
+        <input type="text"   ng-model="name" ng-change="setName()" placeholder="Username" size="14" /></p>
+
+In the video I illustrated this by changing the div below this to:
+
+     <div class="scroll" id="msgpane">
+     <p>{{name}}</p>
+     </div>
+Then when [I typed something into the input field we see it echoed in the div area.](https://youtu.be/5cQFzc_Zo8M?list=PLuZfoSIficQvVN44F1emhKAF-1KIoRcok&t=484) We also see that Angular variables look like variables in Flask templates.
+
+### 4. In the demo I create a javascript file (controller.js)
+
+     var ISSChatApp = angular.module('ISSChatApp', []);
+
+    ISSChatApp.controller('ChatController', function($scope){
+    var socket = io.connect('https://' + document.domain + ':' 
+    +location.port + '/iss'); 
+    
+    $scope.messages = [];
+    $scope.name = '';
+    $scope.text = '';
+    
+
+    socket.on('message', function(msg){
+       console.log(msg);
+       $scope.messages.push(msg);
+       $scope.$apply();
+       var elem = document.getElementById('msgpane');
+       elem.scrollTop = elem.scrollHeight;
+        
+    });
+
+* In this example, the namespace is `iss`. This is important to know.
+* The variables I am using are prefixed with `$scope.` 
+* The `console.log(msg)` prints to the javascript console **in the browser**
+
+Next I will import this javascript file in my html file:
+ 
+     <script src="js/controller.js"></script>
+     
+Then I associate the angular app I created in the javascript file to the html code:
+
+     <html ng-app="ISSChatApp">
+     
+
+Next, I associate the controller (see the name I gave it in the javascript code above) to the html code:
+
+     <div class="container" ng-controller="ChatController">
+     
+## Now the Python side
+
+### uuid  universal unique identifiers.
+
+We are going to make use of Python's uuid module. As the name implies, it generates unique identifiers. Here is an example
+
+     >>> import uuid
+     >>> uuid.uuid1()
+     UUID('a018b2ba-7ec8-11e6-8d1d-7831c1cca2c6')
+     >>> uuid.uuid1()
+     UUID('a13799d8-7ec8-11e6-b71f-7831c1cca2c6')
+     >>> uuid.uuid1()
+     UUID('a539e3e2-7ec8-11e6-8fbd-7831c1cca2c6')
+     >>> uuid.uuid1()
+     UUID('a70c1f62-7ec8-11e6-adf2-7831c1cca2c6')
+     
+we are going to use this to keep track of unique users of our site
+
+So in my server.py file I will import that library and the socketio library:
+
+     import uuid
+     from flask.ext.socketio import SocketIO, emit
+     
+then I create the socketio app:
+
+     socketio = SocketIO(app)
+     
+Now I will make a few test messages stored in a list:
+
+     messages = [{'text': 'Booting system', 'name': 'Bot'},
+            {'text': 'ISS Chat now live!', 'name': 'Bot'}]
+
+     users = {}
+     
+The run command at the bottom of the file I change to:
+
+      # start the server
+     if __name__ == '__main__':
+        socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port =int(os.getenv('PORT', 8080)), debug=True)
+
+### now I will show handling one event--the connect event
+
+      @socketio.on('connect', namespace='/iss')
+      def makeConnection():
+         session['uuid'] = uuid.uuid1()
+         session['username'] = 'New user'
+         print('connected')
+         users[session['uuid']] = {'username': 'New user'}
+    
+         for message in messages:
+             print(message)
+             emit('message', message)
+
+
+The emit function takes the following arguments:
+
+       emit(eventName, arguments)
+       
+so 
+
+       emit('message', message)
+       
+sends an event named `message` to the javascript client side with the value of the variable message. It only sends it to the one user. If we use the optional `broadcast = True` the event will be sent to all connected users.
+
+     emit('message', tmp, broadcast=True)
+     
+### IMPORTANT:
+
+Since I emit an event `message` on the Python side, I need a corresponding 
+
+     socket.on('message', function(msg){
+     
+in the Javascript file. (If you scroll up a bit to the Javascript code, you will see that we do.)  The reverse is also true. If we have on the Javascript side:
+
+     socket.emit('identify', $scope.name)
+
+So Javascript is emitting an event named 'identify'. We need a corresponding 
+
+     @socketio.on('identify', namespace='/iss')
+     
+on the Python side. 
+
+Also the namespace in that Python line needs to match the namespace defined in the Javascript file.
 
