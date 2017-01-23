@@ -1,6 +1,7 @@
 ## Welcome to CS350
 
 ## Contents
+### [Video 0: Introduction to Vagrant](#video-0-introduction-to-vagrant-1)
 ### [Video 1: Getting Started with Cloud9](#video-1-getting-started-with-cloud9-1)
 ### [Video 2: Getting Started with Flask](#video-2-getting-started-with-flask-1)
 ### [Video 3: Flask Template Basics](#video-3-flask-template-basics-1)
@@ -13,6 +14,83 @@
 ### [Video 10: Session Variables and Hashing Passwords](#video-10-session-variables-and-hashing-passwords-1)
 ### [Video 11: Learning the rudiments of sessions and passwords](#video-11-learning-the-rudiments-of-sessions-and-passwords-1)
 ### [Video 12: SocketIO Part 1: AngularJS and flask-socketio](#video-12-socketio-part-1-angularjs-and-flask-socketio-1)
+
+# Video 0: Introduction to Vagrant
+The process:
+
+1. develop code on whatever development environment you want
+2. push your code to a git repository (for ex., gitlab)
+3. pull the code onto your production machine (for example, a VM on Google Cloud)
+4. run your code on your production machine
+
+As 1 states, you can develop on whatever environment you want. This video covers one of them, vagrant, the next video covers Cloud9.
+
+### Vagrant
+First, we installed Vagrant. To get a virtual machine running:
+
+**Step 1**. We created a directory and changed into it. So on my Mac:
+
+	mkdir cs350
+	cd cs350
+
+**Step 2**: Decide on an OS and create the VagrantFile. Here I am using ubuntu yakkety64.
+
+	vagrant init ubuntu/yakkety64
+	
+**Step 3**: I edit the config file to uncomment (and change the guest port to 8080)
+
+	config.vm.network "forwarded_port", guest: 8080, host: 8080
+
+and I save that file.
+
+**Step 4**  Start the virtual machine
+
+	vagrant up
+	
+This takes a bit of time the first time you do it.  If you want to stop the machine:
+
+	vagrant halt
+	
+and if you want to get rid of the machine
+
+	vagrant destroy
+	
+**Step 5**  ssh into the machine
+
+	vagrant ssh
+	
+Now I am in the machine just like ssh-ing into other machines you are familiar with. This one you have total control over.
+
+To exit ssh:
+
+	exit
+	
+**Step 6**  the shared directory
+the `/vagrant` directory is a shared directory. It shares whatever folder you were in when you typed `vagrant up`
+
+	cd /vagrant
+	ls
+	
+So I can edit files using my favorite Mac editor (Sublime) and execute those files on my Ubuntu VM.
+
+**Step 7** Installing software
+So I ssh into the machine. Now I want to install the software I will use:
+First I will install Flask:
+
+	pip install flask markdown
+	
+or
+
+	easy_install flask markdown
+	
+How to use Flask is explained in another video.
+
+
+	
+
+
+
+
 
 # Video 1: Getting Started with Cloud9
 No summary provided.
