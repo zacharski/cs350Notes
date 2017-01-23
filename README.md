@@ -2,6 +2,7 @@
 
 ## Contents
 ### [Video 0: Introduction to Vagrant](#video-0-introduction-to-vagrant-1)
+###[Video 00  Google Cloud Intro](#video-00-google-cloud-intro)
 ### [Video 1: Getting Started with Cloud9](#video-1-getting-started-with-cloud9-1)
 ### [Video 2: Getting Started with Flask](#video-2-getting-started-with-flask-1)
 ### [Video 3: Flask Template Basics](#video-3-flask-template-basics-1)
@@ -86,6 +87,76 @@ or
 How to use Flask is explained in another video.
 
 
+	
+# Video 00 Google Cloud Intro
+
+Goal - one look at deploying an app.
+
+1. how to get started with a virtual machine in google cloud.
+2. how to install what we need for the class. - or at least a few examples.
+3. ways of getting our web app started.
+
+
+
+# a lot of exciting technology
+* docker containers
+* google app engine
+* various google database services
+
+a virtual machine is perhaps not as exciting but will provide a good foundation.
+
+## these notes don't cover actually creating the vm on google. 
+
+## flask prep
+Now install some python stuff I need
+
+     sudo apt-get install python-setuptools
+     sudo easy_install flask markdown
+     
+
+
+
+## POSTGRES
+
+	sudo apt-get install postgresql
+	sudo sudo -u postgres psql
+	\password kirbyk9
+	
+
+
+
+## ways of starting flask app
+
+	sudo python server.py
+	
+option 2 is to use gunicorn
+
+	sudo gunicorn -w 2 -b :80 server:app
+	
+option 3 - add supervisor
+
+following [these instructions](https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-supervisor-on-ubuntu-and-debian-vps)
+
+     apt-get install supervisor
+     
+
+my config file
+
+	[program:uni_app]
+	command=/usr/local/bin/gunicorn -b :8080 server:app
+	autostart=true
+	autorestart=true
+	directory=/vagrant/rcClub
+	stderr_logfile=/var/log/long.err.log
+	stdout_logfile=/var/log/long.outy.log
+	
+stick that in `/etc/supervisor/conf.d`
+
+then	
+
+	sudo supervisorctl reread
+	sudo supervisorctl update
+	sudo supervisorctl restart uni_app
 	
 
 
