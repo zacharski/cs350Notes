@@ -143,7 +143,7 @@ following [these instructions](https://www.digitalocean.com/community/tutorials/
 my config file
 
 	[program:uni_app]
-	command=/usr/local/bin/gunicorn -b :8080 server:app
+	command=/usr/local/bin/gunicorn -b :80 server:app
 	autostart=true
 	autorestart=true
 	directory=/vagrant/rcClub
