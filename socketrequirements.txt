@@ -1,0 +1,6 @@
+gevent
+gevent-websocket
+flask-socketio
+gunicorn
+greenlet
+python3-psycopg2
